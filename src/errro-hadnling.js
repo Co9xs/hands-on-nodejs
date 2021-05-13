@@ -20,7 +20,7 @@ function parseJSONSyncCallback(json, callback) {
 }
 
 // nodejsの規約に沿ったパターン(callbackの引数にerrorを渡す)
-function parseJSONSync2 (json, callback) {
+function parseJSONAsync (json, callback) {
   setTimeout(() => {
     try {
       callback(null, JSON.parse(json))
