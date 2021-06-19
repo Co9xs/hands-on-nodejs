@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "node ./src/todo-app/app"
+  },
   "dependencies": {
     "express": "^4.17.1"
   }
