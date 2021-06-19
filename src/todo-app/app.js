@@ -1,5 +1,16 @@
 const express = require("express")
-const { nextTick } = require("process")
+const next = require("next")
+const dev = process.env.NODE_ENV !== 'production'
+const nextApp = next({ dev })
+
+nextApp.prepare().then(
+  () => app.get('*', nextApp.getRequestHandler()),
+  err => {
+    console.error(err)
+    process.exit(1)
+  }
+)
+
 let todos = [
   {id: 1, title: "ネーム", completed: false},
   {id: 2, title: "下書き", completed: true},
