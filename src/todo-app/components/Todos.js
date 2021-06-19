@@ -19,13 +19,13 @@ const pageLinks = Object.keys(pages).map((page, index) => {
 
 export default function Todos(props) {
   const { title, fetchQuery } = pages[props.page]
-  const [todos, setTodos] = useState({})
+  const [todos, setTodos] = useState([])
   useEffect(() => {
-    fetch(`/api/todos/${fetchQuery}`)
+    console.log("============ useEffect =============")
+    fetch(`/api/todos${fetchQuery}`)
     .then(async res => res.ok
       ? setTodos(await res.json())
-      : alert(await res.text()
-      ))
+      : alert(await res.text()))
   },[props.page])
 
   return (
@@ -35,11 +35,11 @@ export default function Todos(props) {
       </Head>
       <h1>{title}</h1>
       <ul>
-        {todos.map(({id,title,completed}) => {
+        {todos.map(({id,title,completed}) => (
           <li key={id}>
             <span style={completed ? { textDecoration: 'line-through'} : {}}>{title}</span>
           </li>
-        })}
+        ))}
       </ul>
       <div>{pageLinks}</div>
     </>
