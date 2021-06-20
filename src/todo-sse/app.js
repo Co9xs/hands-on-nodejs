@@ -43,6 +43,12 @@ app.get("/api/todos/events", (req, res) => {
   })
 })
 
+function onUpdateTodos() {
+  sseId += 1
+  const data = JSON.stringify(todos)
+  sseSenders.forEach(send => send(sseId, data))
+}
+
 let id = 2
 app.post("/api/todos", (req, res, next) => {
   const { title } = req.body
@@ -54,6 +60,7 @@ app.post("/api/todos", (req, res, next) => {
   const todo = {id: id += 1, title, completed: false}
   todos.push(todo)
   res.status(201).json(todo)
+  onUpdateTodos()
 })
 
 app.use((err, req, res, next) => {
