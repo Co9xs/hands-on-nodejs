@@ -23,9 +23,21 @@ export default function Todos(props) {
   useEffect(() => {
     console.log("============ useEffect =============")
     fetch(`/api/todos${fetchQuery}`)
-    .then(async res => res.ok
-      ? setTodos(await res.json())
-      : alert(await res.text()))
+    .then(async res => {
+      const json = await res.json()
+      res.ok ? setTodos(json) : alert(json)
+    })
+    const eventSource = new EventSource('/api/todos/events')
+    eventSource.addEventListener('message', e => {
+      const todos = JSON.parse(e.data)
+      setTodos(
+        typeof completed === "undefined"
+        ? todos
+        : todos.filter(todo => todo.completed === completed)
+      )
+    })
+    eventSource.addEventListener('error', e => console.log('SSEエラー', e))
+    return () => eventSource.close()
   },[props.page])
 
   return (
