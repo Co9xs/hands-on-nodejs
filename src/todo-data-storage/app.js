@@ -1,6 +1,6 @@
 const express = require("express")
 const { v4: uuidv4 } = require("uuid")
-const dataStorage = require(`./${process.env.npm_lificycle_event}`)
+const dataStorage = require(`./${process.env.npm_lifecycle_event}`)
 
 const app = express()
 app.use(express.json())
