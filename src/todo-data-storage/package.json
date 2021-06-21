@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "sqlite": "node app",
     "file-system": "node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
