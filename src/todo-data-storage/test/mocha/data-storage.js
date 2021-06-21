@@ -26,7 +26,7 @@ for (const dataStorageName of ["file-system", "sqlite"]) {
     })
 
     // fetchByCompleted
-    describe("fetchByCompleted", () => {
+    describe("fetchByCompleted()", () => {
       it("completedの値が引数で指定したものと等しいTodoだけを取得できる", async () => {
         assert.deepEqual(await fetchAll(), [])
         assert.deepEqual(await fetchByCompleted(true), [])
@@ -40,6 +40,51 @@ for (const dataStorageName of ["file-system", "sqlite"]) {
         await create(todo3)
         assert.deepEqual(await fetchByCompleted(true), [todo2])
         assert.sameDeepMembers(await fetchByCompleted(false), [todo1, todo3])
+      })
+    })
+
+    // update
+    describe("update()", () => {
+      const todo1 = { id: "a", title: "ネーム", completed: false }
+      const todo2 = { id: "b", title: "下書き", completed: false }
+
+      beforeEach(async () => {
+        await create(todo1)
+        await create(todo2)
+      })
+
+      it("指定したIDのTodoを更新し、更新後のTodoを返す", async () => {
+        assert.deepEqual(
+          await update("a", { completed: true }), 
+          { id: "a", title: "ネーム", completed: true }
+        )
+        assert.deepEqual(
+          await fetchByCompleted(true),
+          [{ id: "a", title: "ネーム", completed: true }]
+        )
+        assert.deepEqual(
+          await fetchByCompleted(false), 
+          [todo2]
+        )
+
+        assert.deepEqual(
+          await update("b", { title: "ペン入れ" }),
+          { id: "b", title: "ペン入れ", completed: false }
+        )
+        assert.deepEqual(
+          await fetchByCompleted(true),
+          [{ id: "a", title: "ネーム", completed: true }]
+        )
+        assert.deepEqual(
+          await fetchByCompleted(false),
+          [{ id: "b", title: "ペン入れ", completed: false }]
+        )
+      })
+
+      it("存在しないIDを指定するとnullを返す", async () => {
+        assert.isNull(await update("c", { completed: true }))
+        assert.deepEqual(await fetchByCompleted(true), [])
+        assert.sameDeepMembers(await fetchByCompleted(false), [todo1, todo2])
       })
     })
 
