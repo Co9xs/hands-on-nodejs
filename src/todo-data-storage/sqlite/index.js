@@ -33,17 +33,15 @@ function rowToTodo(row) {
 }
 
 exports.fetchAll = () => {
-  dbAll('SELECT * FROM todo')
-  .then(rows => rows.map(rowToTodo))
+  return dbAll('SELECT * FROM todo').then(rows => rows.map(rowToTodo))
 }
 
 exports.fetchByCompleted = completed => {
-  dbAll('SELECT * FROM todo WHERE completed = ?', completed)
-  .then(rows => rows.map(rowToTodo))
+  return dbAll('SELECT * FROM todo WHERE completed = ?', completed).then(rows => rows.map(rowToTodo))
 }
 
 exports.create = async todo => {
-  await dbRun(
+  return await dbRun(
     'INSERT INTO todo VALUES (?, ?, ?)',
     todo.id,
     todo.title,
@@ -61,14 +59,14 @@ exports.update = (id, update) => {
     }
   }
   values.push(id)
-  return dbRun(`UPDATE todo SET ${setColmns.join()} WHERE id = ?`, values)
-  .then(({ changes }) => changes === 1
+  return dbRun(`UPDATE todo SET ${setColumns.join()} WHERE id = ?`, values).then(({ changes }) => changes === 1
     ? dbGet('SELECT * FROM todo WHERE id = ?', id).then(rowToTodo)
     : null
   )
 }
 
-exports.remove = id => dbRun('DELETE FROM todo WHERE id = ?', id)
-  .then(({changes}) => changes === 1 ? id : null)
+exports.remove = id => {
+  return dbRun('DELETE FROM todo WHERE id = ?', id).then(({changes}) => changes === 1 ? id : null)
+}
 
   
