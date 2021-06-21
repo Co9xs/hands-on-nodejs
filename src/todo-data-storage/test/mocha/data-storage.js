@@ -88,5 +88,25 @@ for (const dataStorageName of ["file-system", "sqlite"]) {
       })
     })
 
+    // remove
+    describe("remove()", () => {
+      const todo1 = { id: "a", title: "ネーム", completed: false }
+      const todo2 = { id: "b", title: "下書き", completed: false }
+
+      beforeEach(async () => {
+        await create(todo1)
+        await create(todo2)
+      })
+
+      it("指定したIDのTodoを削除する", async () => {
+        assert.strictEqual(await remove("b"), "b")
+        assert.deepEqual(await fetchAll(), [todo1])
+      })
+
+      it("存在しないIDを指定するとnullを返す", async () => {
+        assert.strictEqual(await remove("c"), null)
+        assert.sameDeepMembers(await fetchAll(), [todo1, todo2])
+      })
+    })
   })
 }
